@@ -9,8 +9,8 @@ struct CE_Vertex
 	XMFLOAT3 normal;
 	XMFLOAT2 uv;
 	XMFLOAT4 color;
-	XMFLOAT3 tangent;
-	XMFLOAT3 biNormal;
+	//XMFLOAT3 tangent;
+	//XMFLOAT3 biNormal;
 
 
 	CE_Vertex(float x, float y, float z,
@@ -22,8 +22,8 @@ struct CE_Vertex
 		position(x, y, z),
 		normal(nX, nY, nZ),
 		uv(u, v),
-		tangent(tX, tY, tZ),
-		biNormal(bX, bY, bZ),
+		//tangent(tX, tY, tZ),
+		//biNormal(bX, bY, bZ),
 		color(cR, cG, cB, cA)
 	 {}
 
@@ -40,8 +40,8 @@ struct CE_Vertex
 		position(_pos.x, _pos.y, _pos.z),
 		normal(_normal.x, _normal.y, _normal.z),
 		uv(_uv.x, _uv.y),
-		tangent(0.0f, 0.0f, 0.0f),
-		biNormal(0.0f, 0.0f, 0.0f),
+		//tangent(0.0f, 0.0f, 0.0f),
+		//biNormal(0.0f, 0.0f, 0.0f),
 		color(_color.x, _color.y, _color.z, _color.w)
 	{}
 };

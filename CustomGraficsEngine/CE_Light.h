@@ -10,5 +10,6 @@ public:
 	XMFLOAT4 m_ambientColor;
 	XMFLOAT4 m_specularColor;
 	XMFLOAT3 m_LightDir;
+	float m_specularStrength;
 };
 

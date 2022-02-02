@@ -20,7 +20,7 @@ public:
 
 	void SetSamplerState();
 
-	void SetTexture(LPCWSTR _name);
+	void SetTexture(LPCWSTR _name, int);
 
 
 	//Variablen vom Material
@@ -57,7 +57,7 @@ protected:
 
 	//Texture Ressource
 	ID3D11Resource* texture = nullptr;
-	ID3D11ShaderResourceView* textureSRV = nullptr;
+	ID3D11ShaderResourceView* textureSRV[3] = {};
 
 	//Samplers
 	ID3D11SamplerState* samplerState;

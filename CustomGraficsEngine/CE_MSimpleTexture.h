@@ -10,11 +10,15 @@ public:
 protected:
 	// Constant Buffer
 	// https://docs.microsoft.com/de-de/windows/win32/direct3dhlsl/dx-graphics-hlsl-packing-rules?redirectedfrom=MSDN
-	ID3D11Buffer* vertexBuffer = nullptr;
-	struct MaterialVertexBuffer {
+	ID3D11Buffer* objBuffer = nullptr;
+	struct ObjectBuffer {
+		XMFLOAT4X4 worldMatrix;
+		XMFLOAT4X4 viewProjectionMatrix;
+		XMFLOAT4 worldPositon;
+	};
 
-		XMFLOAT4X4 worldPositon;
-		XMFLOAT4X4 wvp;
+	ID3D11Buffer* sceneBuffer = nullptr;
+	struct SceneBuffer {
 		XMFLOAT3 cameraPosition;
 		float padding;
 	};
@@ -24,8 +28,8 @@ protected:
 		XMFLOAT4 ambient;
 		XMFLOAT4 diffuse;
 		XMFLOAT3 lightDir;
-		float padding;
-		//float ambStrength;
+		XMFLOAT4 specular;
+		float specularStrength;
 	};
 };
 

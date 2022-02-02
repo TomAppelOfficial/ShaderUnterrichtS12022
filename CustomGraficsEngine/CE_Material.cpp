@@ -6,7 +6,7 @@ void CE_Material::Init(LPCWSTR _vertex, LPCWSTR _pixel)
 	createVertexShader(_vertex);
 	createPixelShader(_pixel);
 
-	//CreateBuffer(sizeof(MaterialVertexBuffer), &vertexBuffer);
+	//CreateBuffer(sizeof(ObjectBuffer), &objBuffer);
 	//CreateBuffer(sizeof(MaterialPixelBuffer), &pixelBuffer);
 	//createMatVBuffer();
 	//createMatPBuffer();
@@ -19,9 +19,9 @@ void CE_Material::Render(CE_Object& _obj, CE_Light& _light)
 	CORE_DEVICECONTEXT->VSSetShader(vertexShader, nullptr, 0);
 	CORE_DEVICECONTEXT->PSSetShader(pixelShader, nullptr, 0);
 
-	//MaterialVertexBuffer* vertex = {};
-	////vertex = SetVertexBuffer(vertexBuffer, 0, vertex);
-	//SetVertexBuffer(vertexBuffer, 0, vertex);
+	//ObjectBuffer* vertex = {};
+	////vertex = SetVertexBuffer(objBuffer, 0, vertex);
+	//SetVertexBuffer(objBuffer, 0, vertex);
 	//XMStoreFloat4x4(&(vertex->worldPositon), XMMatrixTranspose(_worldPos));
 	//XMStoreFloat4x4(&(vertex->wvp), XMMatrixTranspose(_worldPos * CORE_MAINCAM->GetViewProjectionMatrix()));
 	//vertex->cameraPosition = CORE_MAINCAM->Transform->GetPositon();
@@ -65,8 +65,7 @@ void CE_Material::DeInit()
 	}
 
 	if (textureSRV != nullptr) {
-		textureSRV->Release();
-		textureSRV = nullptr;
+		delete textureSRV;
 	}
 
 	//Release Samplerstate
@@ -89,9 +88,9 @@ void CE_Material::SetSamplerState()
 	CheckFailed(hr, "CE_Material", __LINE__, "Create Sampler State Failed");
 }
 
-void CE_Material::SetTexture(LPCWSTR _name)
+void CE_Material::SetTexture(LPCWSTR _name, int _index)
 {
-	HRESULT hr = CreateWICTextureFromFile(CORE_DEVICE, _name, &texture, &textureSRV);
+	HRESULT hr = CreateWICTextureFromFile(CORE_DEVICE, _name, &texture, &textureSRV[_index]);
 	CheckFailed(hr, "CE_Material", __LINE__, "Create WIC Texture From File Failed");
 }
 
@@ -148,7 +147,7 @@ void CE_Material::createPixelShader(LPCWSTR _name)
 
 void CE_Material::createInputLayout(ID3DBlob* _blob)
 {
-	D3D11_INPUT_ELEMENT_DESC elements[4] = {};
+	D3D11_INPUT_ELEMENT_DESC elements[3] = {};
 
 	elements[0].SemanticName = "Position";
 	elements[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
@@ -161,11 +160,7 @@ void CE_Material::createInputLayout(ID3DBlob* _blob)
 	elements[2].Format = DXGI_FORMAT_R32G32_FLOAT;
 	elements[2].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
 
-	elements[3].SemanticName = "COLOR";
-	elements[3].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-	elements[3].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-
-	HRESULT hr = CORE_DEVICE->CreateInputLayout(elements, 4, _blob->GetBufferPointer(), _blob->GetBufferSize(), &inputLayout);
+	HRESULT hr = CORE_DEVICE->CreateInputLayout(elements, 3, _blob->GetBufferPointer(), _blob->GetBufferSize(), &inputLayout);
 	CheckFailed(hr, "CE_Material", __LINE__, "Create InputLayout Failed");
 }
 
@@ -173,12 +168,12 @@ void CE_Material::createInputLayout(ID3DBlob* _blob)
 //{
 //	D3D11_BUFFER_DESC desc = {};
 //	desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-//	desc.ByteWidth = sizeof(MaterialVertexBuffer);
-//	//desc.ByteWidth = static_cast<UINT>(sizeof(MaterialVertexBuffer) + (16 - sizeof(MaterialVertexBuffer) % 16));
+//	desc.ByteWidth = sizeof(ObjectBuffer);
+//	//desc.ByteWidth = static_cast<UINT>(sizeof(ObjectBuffer) + (16 - sizeof(ObjectBuffer) % 16));
 //	desc.Usage = D3D11_USAGE_DYNAMIC;
 //	desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 //
-//	HRESULT hr = CORE_DEVICE->CreateBuffer(&desc, nullptr, &vertexBuffer);
+//	HRESULT hr = CORE_DEVICE->CreateBuffer(&desc, nullptr, &objBuffer);
 //	CheckFailed(hr, "CE_Material", 146, "Create Vertex Buffer failed");
 //}
 //
@@ -209,17 +204,17 @@ void CE_Material::CreateBuffer(UINT _size, ID3D11Buffer** _buffer)
 //void CE_Material::setMatVBuffer(XMMATRIX _worldPosition)
 //{
 //	D3D11_MAPPED_SUBRESOURCE data = {};
-//	HRESULT hr = CORE_DEVICECONTEXT->Map(vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &data);
+//	HRESULT hr = CORE_DEVICECONTEXT->Map(objBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &data);
 //	CheckFailed(hr, "CE_Material", 166, "Map Material Vertex Buffer Failed");
 //
-//	MaterialVertexBuffer* buffer = reinterpret_cast<MaterialVertexBuffer*>(data.pData);
+//	ObjectBuffer* buffer = reinterpret_cast<ObjectBuffer*>(data.pData);
 //	//TODO: Hier kommt Stuff rein
 //	XMStoreFloat4x4(&(buffer->worldPositon), XMMatrixTranspose(_worldPosition));
 //	XMStoreFloat4x4(&(buffer->wvp), XMMatrixTranspose(_worldPosition * CORE_MAINCAM->GetViewProjectionMatrix()));
 //	buffer->cameraPosition = CORE_MAINCAM->Transform->GetPositon();
 //
-//	CORE_DEVICECONTEXT->Unmap(vertexBuffer, 0);
-//	CORE_DEVICECONTEXT->VSSetConstantBuffers(0, 1, &vertexBuffer);
+//	CORE_DEVICECONTEXT->Unmap(objBuffer, 0);
+//	CORE_DEVICECONTEXT->VSSetConstantBuffers(0, 1, &objBuffer);
 //}
 //
 //void CE_Material::setMatPBuffer()

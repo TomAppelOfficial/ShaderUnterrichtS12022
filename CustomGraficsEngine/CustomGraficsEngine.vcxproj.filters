@@ -72,6 +72,9 @@
     <ClInclude Include="CE_Light.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="CE_PMSphere.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CustomEngine.cpp">
@@ -126,6 +129,9 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="CE_Light.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="CE_PMSphere.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>

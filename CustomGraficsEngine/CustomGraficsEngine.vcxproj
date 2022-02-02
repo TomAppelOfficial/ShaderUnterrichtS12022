@@ -165,6 +165,7 @@ copy /y $(ProjectDir)bricks2.jpg $(TargetDir)bricks2.jpg</Command>
     <ClInclude Include="CE_ObjectPool.h" />
     <ClInclude Include="CE_PMCube.h" />
     <ClInclude Include="CE_PMPlane.h" />
+    <ClInclude Include="CE_PMSphere.h" />
     <ClInclude Include="CE_Renderer.h" />
     <ClInclude Include="CE_Scence.h" />
     <ClInclude Include="CE_TestScene.h" />
@@ -186,6 +187,7 @@ copy /y $(ProjectDir)bricks2.jpg $(TargetDir)bricks2.jpg</Command>
     <ClCompile Include="CE_ObjectPool.cpp" />
     <ClCompile Include="CE_PMCube.cpp" />
     <ClCompile Include="CE_PMPlane.cpp" />
+    <ClCompile Include="CE_PMSphere.cpp" />
     <ClCompile Include="CE_Renderer.cpp" />
     <ClCompile Include="CE_Scence.cpp" />
     <ClCompile Include="CE_TestScene.cpp" />
