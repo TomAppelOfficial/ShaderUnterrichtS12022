@@ -1,58 +1,84 @@
-#include "CE_PMCube.h"
+#include "CE_PMSphere.h"
 
-void CE_PMCube::InitBuffer()
+void CE_PMSphere::InitBuffer()
 {
-	vertices.push_back({ XMFLOAT3(-0.5f, -0.5f, -0.5f),	XMFLOAT3(0, 0, -1), XMFLOAT2(0, 1), Color });
-	vertices.push_back({ XMFLOAT3(0.5f, -0.5f, -0.5f),	XMFLOAT3(0, 0, -1), XMFLOAT2(1, 1), Color });
-	vertices.push_back({ XMFLOAT3(-0.5f,  0.5f, -0.5f),	XMFLOAT3(0, 0, -1), XMFLOAT2(0, 0), Color });
-	vertices.push_back({ XMFLOAT3(0.5f,  0.5f, -0.5f),	XMFLOAT3(0, 0, -1), XMFLOAT2(1, 0), Color });
+	int stackCount = 24;
+	int sliceCount = 24;
+	float radius = 1.0f;
+	float x, y, z, xy;
+	float nx, ny, nz, lengthInv = 1.0f / radius;
+	float u, v;
 
-	// rechts
-	vertices.push_back({ XMFLOAT3(0.5f, -0.5f, -0.5f),	XMFLOAT3(1, 0, 0),	XMFLOAT2(0, 1), Color });
-	vertices.push_back({ XMFLOAT3(0.5f, -0.5f,  0.5f),	XMFLOAT3(1, 0, 0),	XMFLOAT2(1, 1), Color });
-	vertices.push_back({ XMFLOAT3(0.5f,  0.5f, -0.5f),	XMFLOAT3(1, 0, 0),	XMFLOAT2(0, 0), Color });
-	vertices.push_back({ XMFLOAT3(0.5f,  0.5f,  0.5f),	XMFLOAT3(1, 0, 0),	XMFLOAT2(1, 0), Color });
+	float sectorStep = XM_2PI / sliceCount;
+	float stackStep = XM_PI / stackCount;
+	float sectorAngle, stackAngle;
 
-	// hinten
-	vertices.push_back({ XMFLOAT3(0.5f, -0.5f,  0.5f),	XMFLOAT3(0, 0, 1),	XMFLOAT2(0, 1), Color });
-	vertices.push_back({ XMFLOAT3(-0.5f, -0.5f,  0.5f),	XMFLOAT3(0, 0, 1),	XMFLOAT2(1, 1), Color });
-	vertices.push_back({ XMFLOAT3(0.5f,  0.5f,  0.5f),	XMFLOAT3(0, 0, 1),	XMFLOAT2(0, 0), Color });
-	vertices.push_back({ XMFLOAT3(-0.5f,  0.5f,  0.5f),	XMFLOAT3(0, 0, 1),	XMFLOAT2(1, 0), Color });
-
-	// links
-	vertices.push_back({ XMFLOAT3(-0.5f, -0.5f,  0.5f),	XMFLOAT3(-1, 0, 0), XMFLOAT2(0, 1), Color });
-	vertices.push_back({ XMFLOAT3(-0.5f, -0.5f, -0.5f),	XMFLOAT3(-1, 0, 0), XMFLOAT2(1, 1), Color });
-	vertices.push_back({ XMFLOAT3(-0.5f,  0.5f,  0.5f),	XMFLOAT3(-1, 0, 0), XMFLOAT2(0, 0), Color });
-	vertices.push_back({ XMFLOAT3(-0.5f,  0.5f, -0.5f),	XMFLOAT3(-1, 0, 0), XMFLOAT2(1, 0), Color });
-
-	// oben
-	vertices.push_back({ XMFLOAT3(-0.5f, 0.5f, -0.5f),	XMFLOAT3(0, 1, 0),	XMFLOAT2(0, 1), Color });
-	vertices.push_back({ XMFLOAT3(0.5f, 0.5f, -0.5f),	XMFLOAT3(0, 1, 0),	XMFLOAT2(1, 1), Color });
-	vertices.push_back({ XMFLOAT3(-0.5f, 0.5f,  0.5f),	XMFLOAT3(0, 1, 0),	XMFLOAT2(0, 0), Color });
-	vertices.push_back({ XMFLOAT3(0.5f, 0.5f,  0.5f),	XMFLOAT3(0, 1, 0),	XMFLOAT2(1, 0), Color });
-
-	// unten
-	vertices.push_back({ XMFLOAT3(0.5f, -0.5f, -0.5f),	XMFLOAT3(0, -1, 0), XMFLOAT2(0, 1), Color });
-	vertices.push_back({ XMFLOAT3(-0.5f, -0.5f, -0.5f),	XMFLOAT3(0, -1, 0), XMFLOAT2(1, 1), Color });
-	vertices.push_back({ XMFLOAT3(0.5f, -0.5f,  0.5f),	XMFLOAT3(0, -1, 0), XMFLOAT2(0, 0), Color });
-	vertices.push_back({ XMFLOAT3(-0.5f, -0.5f,  0.5f),	XMFLOAT3(0, -1, 0), XMFLOAT2(1, 0), Color });
-
-
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i <= stackCount; ++i)
 	{
-		indicies.push_back(0 + i * 4);
-		indicies.push_back(2 + i * 4);
-		indicies.push_back(3 + i * 4);
+		stackAngle = XM_PI / 2 - i * stackStep;        // starting from pi/2 to -pi/2
+		xy = radius * cosf(stackAngle);             // r * cos(u)
+		z = radius * sinf(stackAngle);              // r * sin(u)
 
-		indicies.push_back(3 + i * 4);
-		indicies.push_back(1 + i * 4);
-		indicies.push_back(0 + i * 4);
+		// add (sectorCount+1) vertices per stack
+		// the first and last vertices have same position and normal, but different tex coords
+		for (int j = 0; j <= sliceCount; ++j)
+		{
+			sectorAngle = j * sectorStep;           // starting from 0 to 2pi
+
+			// vertex position (x, y, z)
+
+			x = xy * cosf(sectorAngle);             // r * cos(u) * cos(v)
+			y = xy * sinf(sectorAngle);             // r * cos(u) * sin(v)
+
+			// normalized vertex normal (nx, ny, nz)
+			nx = x * lengthInv;
+			ny = y * lengthInv;
+			nz = z * lengthInv;
+
+			// vertex tex coord (u, v) range between [0, 1]
+			u = (float)j / sliceCount;
+			v = (float)i / stackCount;
+			vertices.push_back({ XMFLOAT3(x, y, z),
+							   XMFLOAT3(nx, ny, nz),
+							   XMFLOAT2(u, v),
+							   Color });
+		}
 	}
 
-	CalculateModelVectors();
+	// generate CCW index list of sphere triangles
+	// k1--k1+1
+	// |  / |
+	// | /  |
+	// k2--k2+1
+	int k1, k2;
+	for (int i = 0; i < stackCount; ++i)
+	{
+		k1 = i * (sliceCount + 1);     // beginning of current stack
+		k2 = k1 + sliceCount + 1;      // beginning of next stack
+
+		for (int j = 0; j < sliceCount; ++j, ++k1, ++k2)
+		{
+			// 2 triangles per sector excluding first and last stacks
+			// k1 => k2 => k1+1
+			if (i != 0)
+			{
+				indicies.push_back(k1);
+				indicies.push_back(k2);
+				indicies.push_back(k1 + 1);
+			}
+
+			// k1+1 => k2 => k2+1
+			if (i != (stackCount - 1))
+			{
+				indicies.push_back(k1 + 1);
+				indicies.push_back(k2);
+				indicies.push_back(k2 + 1);
+			}
+		}
+	}
 }
 
-void CE_PMCube::CalculateModelVectors()
+void CE_PMSphere::CalculateModelVectors()
 {
 	int faceCount, i, index, indiciesCount;
 	TempVertexType vertex1, vertex2, vertex3;
@@ -137,7 +163,7 @@ void CE_PMCube::CalculateModelVectors()
 	}
 }
 
-void CE_PMCube::CalculateTangentBinormal(TempVertexType vertex1, TempVertexType vertex2, TempVertexType vertex3, XMFLOAT3& tangent, XMFLOAT3& binormal)
+void CE_PMSphere::CalculateTangentBinormal(TempVertexType vertex1, TempVertexType vertex2, TempVertexType vertex3, XMFLOAT3& tangent, XMFLOAT3& binormal)
 {
 	float vector1[3], vector2[3];
 	float tuVector[2], tvVector[2];
@@ -189,7 +215,7 @@ void CE_PMCube::CalculateTangentBinormal(TempVertexType vertex1, TempVertexType 
 	binormal.z = binormal.z / length;
 }
 
-void CE_PMCube::CalculateNormal(XMFLOAT3 tangent, XMFLOAT3 binormal, XMFLOAT3& normal)
+void CE_PMSphere::CalculateNormal(XMFLOAT3 tangent, XMFLOAT3 binormal, XMFLOAT3& normal)
 {
 	float length;
 

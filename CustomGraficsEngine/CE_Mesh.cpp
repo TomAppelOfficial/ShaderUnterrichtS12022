@@ -35,6 +35,18 @@ void CE_Mesh::InitBuffer()
 
 }
 
+void CE_Mesh::CalculateModelVectors()
+{
+}
+
+void CE_Mesh::CalculateTangentBinormal(TempVertexType, TempVertexType, TempVertexType, XMFLOAT3&, XMFLOAT3&)
+{
+}
+
+void CE_Mesh::CalculateNormal(XMFLOAT3, XMFLOAT3, XMFLOAT3&)
+{
+}
+
 void CE_Mesh::CreateBuffer()
 {
 	vertexStride = sizeof(CE_Vertex);

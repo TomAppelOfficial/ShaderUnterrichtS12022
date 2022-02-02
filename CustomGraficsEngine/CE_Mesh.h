@@ -16,6 +16,9 @@ public:
 	XMFLOAT4 Color = XMFLOAT4(1, 0, 0, 1);
 protected:
 	virtual void InitBuffer();
+	virtual void CalculateModelVectors();
+	virtual void CalculateTangentBinormal(TempVertexType, TempVertexType, TempVertexType, XMFLOAT3&, XMFLOAT3&);
+	virtual void CalculateNormal(XMFLOAT3, XMFLOAT3, XMFLOAT3&);
 	void CreateBuffer();
 	
 	std::vector<CE_Vertex> vertices;
