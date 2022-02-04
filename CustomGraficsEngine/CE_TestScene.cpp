@@ -22,11 +22,11 @@ void CE_TestScene::Init()
 	material->SetTexture(L"alphaMap.png", 2);
 
 	m_light = std::make_unique<CE_Light>();
-	m_light->m_ambientColor = XMFLOAT4(0.1f, 0.1f, 0.1f, 1);
+	m_light->m_ambientColor = XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f);
 	m_light->m_diffuseColor = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
 	m_light->m_specularColor = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	m_light->m_LightDir = XMFLOAT3(0.0f, 0.0f, 1.0f);
-	m_light->m_specularStrength = 32;
+	m_light->m_specularStrength = 32.0f;
 
 	//// Init Objects
 	//std::shared_ptr<CE_Object> cubeObj1 = std::make_shared<CE_Object>();

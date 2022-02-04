@@ -134,6 +134,11 @@ copy /y $(ProjectDir)bricks2.jpg $(TargetDir)bricks2.jpg</Command>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>copy /y $(ProjectDir)TestPixelShader.hlsl $(TargetDir)TestPixelShader.hlsl
+copy /y $(ProjectDir)TestVertexShader.hlsl $(TargetDir)TestVertexShader.hlsl
+copy /y $(ProjectDir)bricks2.jpg $(TargetDir)bricks2.jpg</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
