@@ -147,7 +147,7 @@ void CE_Material::createPixelShader(LPCWSTR _name)
 
 void CE_Material::createInputLayout(ID3DBlob* _blob)
 {
-	D3D11_INPUT_ELEMENT_DESC elements[3] = {};
+	D3D11_INPUT_ELEMENT_DESC elements[5] = {};
 
 	elements[0].SemanticName = "Position";
 	elements[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
@@ -160,7 +160,15 @@ void CE_Material::createInputLayout(ID3DBlob* _blob)
 	elements[2].Format = DXGI_FORMAT_R32G32_FLOAT;
 	elements[2].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
 
-	HRESULT hr = CORE_DEVICE->CreateInputLayout(elements, 3, _blob->GetBufferPointer(), _blob->GetBufferSize(), &inputLayout);
+	elements[3].SemanticName = "TANGENT";
+	elements[3].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	elements[3].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+
+	elements[4].SemanticName = "BINORMAL";
+	elements[4].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	elements[4].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+
+	HRESULT hr = CORE_DEVICE->CreateInputLayout(elements, 5, _blob->GetBufferPointer(), _blob->GetBufferSize(), &inputLayout);
 	CheckFailed(hr, "CE_Material", __LINE__, "Create InputLayout Failed");
 }
 
