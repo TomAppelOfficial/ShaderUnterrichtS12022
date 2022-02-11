@@ -27,8 +27,8 @@ protected:
 	struct MaterialPixelBuffer {
 		XMFLOAT4 ambient;
 		XMFLOAT4 diffuse;
-		XMFLOAT4 specular;
 		XMFLOAT3 lightDir;
+		XMFLOAT4 specular;
 		float specularStrength;
 	};
 };

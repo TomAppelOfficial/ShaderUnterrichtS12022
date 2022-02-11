@@ -75,7 +75,7 @@ void CE_Renderer::Init(HWND _hwnd, INT _width, INT _height, bool _isWindowed)
 
 	D3D11_RASTERIZER_DESC rsDesc = {};
 	rsDesc.FillMode = D3D11_FILL_SOLID;
-	rsDesc.CullMode = D3D11_CULL_BACK;
+	rsDesc.CullMode = D3D11_CULL_NONE;
 
 	hr = d3dDevice->CreateRasterizerState(&rsDesc, &rasterizerState);
 	CheckFailed(hr, "CE_Renderer", __LINE__, "Create Rasterizer State failed");

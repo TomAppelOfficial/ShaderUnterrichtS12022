@@ -26,14 +26,10 @@ VS_OUTPUT main( VS_INPUT _input )
 {
     VS_OUTPUT output;
 	_input.position.w = 1.0f;
-    
     output.position = mul(_input.position, worldMatrix);
     output.position = mul(output.position, ViewProjectionMatrix);
-    
-	output.uv = _input.uv;
-    
     output.normal = normalize(mul(_input.normal, (float3x3) worldMatrix));
-    
-    output.viewDirection = normalize(cameraPosition.xyz - worldPositon.xyz);
+	output.uv = _input.uv;
+    output.viewDirection = normalize(cameraPosition - worldPositon.xyz);
 	return output;
 }
