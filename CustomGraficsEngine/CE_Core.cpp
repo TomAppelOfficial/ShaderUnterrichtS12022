@@ -77,11 +77,11 @@ void CE_Core::Update()
 
 void CE_Core::Render()
 {
-	renderer->BeginScene(0, 1, 0);
+	renderer->BeginScene(0, 0, 0);
 
 	m_step = m_step + timer->DeltaTime();
 
-	if (m_step > 10) {
+	if (m_step > XM_2PI) {
 		m_step = 0;
 	}
 

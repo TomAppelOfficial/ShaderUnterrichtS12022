@@ -9,17 +9,19 @@ void CE_TestScene::Init()
 	// Init Meshes
 	std::shared_ptr<CE_PMCube> cube = std::make_shared<CE_PMCube>();
 	std::shared_ptr<CE_PMSphere> sphereMesh = std::make_shared<CE_PMSphere>();
+	std::shared_ptr<CE_PMPlane> planeMesh = std::make_shared<CE_PMPlane>();
 	cube->Init();
 	sphereMesh->Init();
+	planeMesh->Init();
 
 	//shalki
 	// Init Materials
 	std::shared_ptr<CE_MSimpleTexture> material = std::make_shared<CE_MSimpleTexture>();
 	material->Init(L"TestVertexShader.hlsl", L"TestPixelShader.hlsl");
 	material->SetSamplerState();
-	material->SetTexture(L"brick.png", 0);
-	material->SetTexture(L"grass.png", 1);
-	material->SetTexture(L"alphaMap.png", 2);
+	material->SetTexture(L"Tiles.png", 0);
+	material->SetTexture(L"TilesNormal.png", 1);
+	material->SetTexture(L"TilesSpecular.png", 2);
 
 	m_light = std::make_unique<CE_Light>();
 	m_light->m_ambientColor = XMFLOAT4(0.1f, 0.1f, 0.1f, 1);
@@ -35,6 +37,7 @@ void CE_TestScene::Init()
 	//CORE_OBJECTPOOL->AddObject(cubeObj1);
 
 	// Init Objects
+
 	std::shared_ptr<CE_Object> sphereObj1 = std::make_shared<CE_Object>();
 	sphereObj1->Init(sphereMesh, material);
 	sphereObj1->Transform->SetPosition(5, 0, 0);
@@ -64,11 +67,17 @@ void CE_TestScene::Init()
 	cubeObj5->Transform->SetPosition(0, 5, 0);
 	CORE_OBJECTPOOL->AddObject(cubeObj5);
 
-	std::shared_ptr<CE_Object> cubeObj6 = std::make_shared<CE_Object>();
+	std::shared_ptr<CE_Object> planeObj1 = std::make_shared<CE_Object>();
+	planeObj1->Init(planeMesh, material);
+
+	planeObj1->Transform->SetPosition(0, -5, 0);
+	planeObj1->Transform->SetEulerAngle(90,0 ,0);
+	CORE_OBJECTPOOL->AddObject(planeObj1);
+	/*std::shared_ptr<CE_Object> cubeObj6 = std::make_shared<CE_Object>();
 	cubeObj6->Init(cube, material);
 
 	cubeObj6->Transform->SetPosition(0, -5, 0);
-	CORE_OBJECTPOOL->AddObject(cubeObj6);
+	CORE_OBJECTPOOL->AddObject(cubeObj6);*/
 }
 
 CE_Light CE_TestScene::GetSceneLight()

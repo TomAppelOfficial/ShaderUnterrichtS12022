@@ -2,19 +2,99 @@
 
 void CE_PMPlane::InitBuffer()
 {
-	vertices.push_back({ XMFLOAT3(-5.0f,-5.0f, 0.0f),	XMFLOAT3(0, 0, 1),	XMFLOAT2(0, 1), Color });
-	vertices.push_back({ XMFLOAT3(5.0f, -5.0f, 0.0f),	XMFLOAT3(0, 0, 1),	XMFLOAT2(1, 1), Color });
-	vertices.push_back({ XMFLOAT3(-5.0f,5.0f,  0.0f),	XMFLOAT3(0, 0, 1),	XMFLOAT2(0, 0), Color });
-	vertices.push_back({ XMFLOAT3(5.0f,	5.0f,  0.0f),	XMFLOAT3(0, 0, 1),	XMFLOAT2(1, 0), Color });
+	vertices.push_back({ XMFLOAT3(-5.0f,5.0f,  0.0f),	XMFLOAT3(0, 0, 1),	XMFLOAT2(0, 1), Color });
+	vertices.push_back({ XMFLOAT3(-5.0f,-5.0f, 0.0f),	XMFLOAT3(0, 0, 1),	XMFLOAT2(0, 0), Color });
+	vertices.push_back({ XMFLOAT3(5.0f, -5.0f, 0.0f),	XMFLOAT3(0, 0, 1),	XMFLOAT2(1, 0), Color });
+	vertices.push_back({ XMFLOAT3(5.0f,	5.0f,  0.0f),	XMFLOAT3(0, 0, 1),	XMFLOAT2(1, 1), Color });
 
+	indicies.push_back(0);
+	indicies.push_back(1);
+	indicies.push_back(2);
+	
 	indicies.push_back(0);
 	indicies.push_back(2);
 	indicies.push_back(3);
-	
-	indicies.push_back(3);
-	indicies.push_back(1);
-	indicies.push_back(0);
+
+	CalculateModelVectors();
 }
+
+void CE_PMPlane::CalculateModelVectors()
+{
+
+	XMFLOAT3 pos1 = vertices[0].position;
+	XMFLOAT3 pos2 = vertices[1].position;
+	XMFLOAT3 pos3 = vertices[2].position;
+
+	XMFLOAT2 uv1 = vertices[0].uv;
+	XMFLOAT2 uv2 = vertices[1].uv;
+	XMFLOAT2 uv3 = vertices[2].uv;
+
+	XMFLOAT3 normal = vertices[0].normal;
+
+	XMFLOAT3 edge1 = XMFLOAT3(pos2.x - pos1.x, pos2.y - pos1.y, pos2.z - pos1.z);
+	XMFLOAT3 edge2 = XMFLOAT3(pos3.x - pos1.x, pos3.y - pos1.y, pos3.z - pos1.z);
+
+	XMFLOAT2 deltaUV1 = XMFLOAT2(uv2.x - uv1.x, uv2.y - uv1.y);
+	XMFLOAT2 deltaUV2 = XMFLOAT2(uv3.x - uv1.x, uv3.y - uv1.y);
+
+	float f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
+
+	XMFLOAT3 tangent;
+	XMFLOAT3 binormal;
+
+	tangent.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
+	tangent.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
+	tangent.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
+
+	binormal.x = f * (deltaUV2.x * edge1.x - deltaUV1.x * edge2.x);
+	binormal.y = f * (deltaUV2.x * edge1.y - deltaUV1.x * edge2.y);
+	binormal.z = f * (deltaUV2.x * edge1.z - deltaUV1.x * edge2.z);
+
+	vertices[0].tangent = tangent;
+	vertices[1].tangent = tangent;
+	vertices[2].tangent = tangent;
+
+	vertices[0].biNormal = binormal;
+	vertices[1].biNormal = binormal;
+	vertices[2].biNormal = binormal;
+
+	//Second Triangle
+	pos1 = vertices[1].position;
+	pos2 = vertices[2].position;
+	pos3 = vertices[3].position;
+
+	uv1 = vertices[1].uv;
+	uv2 = vertices[2].uv;
+	uv3 = vertices[3].uv;
+
+	normal = vertices[0].normal;
+
+	edge1 = XMFLOAT3(pos2.x - pos1.x, pos2.y - pos1.y, pos2.z - pos1.z);
+	edge2 = XMFLOAT3(pos3.x - pos1.x, pos3.y - pos1.y, pos3.z - pos1.z);
+
+	deltaUV1 = XMFLOAT2(uv2.x - uv1.x, uv2.y - uv1.y);
+	deltaUV2 = XMFLOAT2(uv3.x - uv1.x, uv3.y - uv1.y);
+
+	f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
+
+	tangent.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
+	tangent.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
+	tangent.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
+
+	binormal.x = f * (deltaUV2.x * edge1.x - deltaUV1.x * edge2.x);
+	binormal.y = f * (deltaUV2.x * edge1.y - deltaUV1.x * edge2.y);
+	binormal.z = f * (deltaUV2.x * edge1.z - deltaUV1.x * edge2.z);
+
+	vertices[1].tangent = tangent;
+	vertices[2].tangent = tangent;
+	vertices[3].tangent = tangent;
+
+	vertices[1].biNormal = binormal;
+	vertices[2].biNormal = binormal;
+	vertices[3].biNormal = binormal;
+}
+
+
 
 //void CE_PMPlane::CalculateModelVectors()
 //{
